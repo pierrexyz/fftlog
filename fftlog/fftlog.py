@@ -56,7 +56,7 @@ class FFTLog(object):
             fx = exp(iloglog(log(self.x)))
 
         elif extrap == 'padding': 
-            ifunc = interp1d(xin, f, axis=-1, kind='cubic')
+            ifunc = interp1d(xin, f, axis=-1, kind='cubic', bounds_error=False, fill_value='extrapolate')
             def f(x): return where((x < xin[0]) | (xin[-1] < x), 0.0, ifunc(x))
             if is_jax: fx = vmap(lambda x: f(x))(self.x)
             else: fx = f(self.x)
