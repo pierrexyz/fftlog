@@ -48,18 +48,22 @@ class FFTLog(object):
         else:
             self.window = None
 
+    def Coef(self, xin, f, mode='interp', extrap='extrap'):
 
-    def Coef(self, xin, f, extrap='extrap'):
-
-        if extrap == 'extrap':
-            iloglog = interp1d(log(xin), log(f), axis=-1, kind='linear', bounds_error=False, fill_value='extrapolate')
-            fx = exp(iloglog(log(self.x)))
-
-        elif extrap == 'padding': 
-            ifunc = interp1d(xin, f, axis=-1, kind='cubic', bounds_error=False, fill_value='extrapolate')
-            def f(x): return where((x < xin[0]) | (xin[-1] < x), 0.0, ifunc(x))
-            if is_jax: fx = vmap(lambda x: f(x))(self.x)
-            else: fx = f(self.x)
+        if mode == 'exact':
+            fx = 1. * f
+        
+        elif mode == 'interp':
+            
+            if extrap == 'extrap':
+                iloglog = interp1d(log(xin), log(f), axis=-1, kind='linear', bounds_error=False, fill_value='extrapolate')
+                fx = exp(iloglog(log(self.x)))
+            
+            elif extrap == 'padding': 
+                ifunc = interp1d(xin, f, axis=-1, kind='cubic', bounds_error=False, fill_value='extrapolate')
+                def f(x): return where((x < xin[0]) | (xin[-1] < x), 0.0, ifunc(x))
+                if is_jax: fx = vmap(lambda x: f(x))(self.x)
+                else: fx = f(self.x)
 
         fx = fx * self.xpb
         tmp = rfft(fx, axis=-1)
