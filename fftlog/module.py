@@ -16,4 +16,5 @@ else:
     from numpy import load, ndarray, conj, ones, tan, log, logspace, swapaxes, empty, array, linspace, arange, delete, where, pi, cos, sin, log, exp, sqrt, concatenate, ones, zeros, real, where, einsum
     from numpy.fft import rfft
     from scipy.interpolate import interp1d
-    from scipy.special import gamma, loggamma
+
+from scipy.special import gamma, loggamma
