@@ -38,9 +38,11 @@ class FFTLog(object):
         self.bias = kwargs['bias']
 
         self.dx = log(self.xmax / self.xmin) / (self.Nmax - 1.)
-        self.x = array([self.xmin * exp(i * self.dx) for i in range(self.Nmax)])
-        self.xpb = array([exp(-self.bias * i * self.dx) for i in range(self.Nmax)])
-        self.Pow = array([self.bias + 1j * 2. * pi * i / (self.Nmax * self.dx) for i in arange(-self.Nmax//2, self.Nmax//2+1)])
+        i = arange(self.Nmax)
+        self.x = self.xmin * exp(i * self.dx)
+        self.xpb = exp(-self.bias * i * self.dx)
+        i = arange(-self.Nmax//2, self.Nmax//2+1)
+        self.Pow = self.bias + 1j * 2. * pi * i / (self.Nmax * self.dx)
 
         if 'window' in kwargs:
             self.window = kwargs['window']
@@ -60,9 +62,10 @@ class FFTLog(object):
                 fx = exp(iloglog(log(self.x)))
             
             elif extrap == 'padding': 
-                ifunc = interp1d(xin, f, axis=-1, kind='cubic', bounds_error=False, fill_value='extrapolate')
-                def f(x): return where((x < xin[0]) | (xin[-1] < x), 0., ifunc(x))
-                fx = f(self.x)
+                f_01 =  where((self.x < xin[0]) | (xin[-1] < self.x), 0.0, 1.)
+                f_mod = swapaxes(f, 0, 1)
+                f_interp = interpax.interp1d(self.x, xin, f_mod, extrap = True)
+                fx = einsum('N, Nk -> kN', f_01, f_interp)
 
         fx = fx * self.xpb
         tmp = rfft(fx, axis=-1)
