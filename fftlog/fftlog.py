@@ -1,6 +1,8 @@
 from fftlog.module import *
 from fftlog.utils import CoefWindow
 
+import interpax
+
 class FFTLog(object):
     """
     A class implementing the FFTLog algorithm.
