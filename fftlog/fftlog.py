@@ -55,7 +55,7 @@ class FFTLog(object):
     def Coef(self, xin, f, mode='interp', extrap='extrap'):
 
         if mode == 'exact':
-            fx = 1. * f
+            fx = 1. * asarray(f)
         
         elif mode == 'interp':
             

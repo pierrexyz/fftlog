@@ -7,13 +7,13 @@ if is_jax:
     from jax import config as jax_config
     jax_config.update("jax_enable_x64", True) 
     import jax.numpy as numpy
-    from jax.numpy import load, array, ndarray, conj, ones, tan, log, logspace, swapaxes, empty, linspace, arange, delete, where, pi, cos, sin, log, exp, sqrt, concatenate, ones, zeros, real, where, einsum
+    from jax.numpy import load, asarray, array, ndarray, conj, ones, tan, log, logspace, swapaxes, empty, linspace, arange, delete, where, pi, cos, sin, log, exp, sqrt, concatenate, ones, zeros, real, where, einsum
     from jax.numpy.fft import rfft
     from fftlog.jax_special import interp1d
 
 else:
     import numpy
-    from numpy import load, ndarray, conj, ones, tan, log, logspace, swapaxes, empty, array, linspace, arange, delete, where, pi, cos, sin, log, exp, sqrt, concatenate, ones, zeros, real, where, einsum
+    from numpy import load, asarray, array, ndarray, conj, ones, tan, log, logspace, swapaxes, empty, array, linspace, arange, delete, where, pi, cos, sin, log, exp, sqrt, concatenate, ones, zeros, real, where, einsum
     from numpy.fft import rfft
     from scipy.interpolate import interp1d
 
