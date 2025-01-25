@@ -64,10 +64,13 @@ class FFTLog(object):
                 fx = exp(iloglog(log(self.x)))
             
             elif extrap == 'padding': 
-                f_01 =  where((self.x < xin[0]) | (xin[-1] < self.x), 0.0, 1.)
-                f_mod = swapaxes(f, 0, 1)
-                f_interp = interpax.interp1d(self.x, xin, f_mod, extrap = True)
-                fx = einsum('N, Nk -> kN', f_01, f_interp)
+                # f_mod = swapaxes(f, 0, 1)
+                # f_interp = interpax.interp1d(self.x, xin, f_mod, extrap = True)
+                # fx = einsum('N, Nk -> kN', f_01, f_interp)
+                ifx = interp1d(xin, f, axis=-1, kind='cubic', bounds_error=False, fill_value=0.)
+                fx = ifx(self.x)
+                # mask_01 =  where((self.x < xin[0]) | (xin[-1] < self.x), 0.0, 1.)
+                # fx = einsum('n, nx -> xn', mask_01, f_interp)
 
         fx = fx * self.xpb
         tmp = rfft(fx, axis=-1)
