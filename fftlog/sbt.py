@@ -33,10 +33,12 @@ class SBT(object):
         self.M = array([1j**ell * MPC(ell, -.5*self.fft.Pow) for ell in self.ells])
         self.xPow = exp(einsum('n,x->nx', -self.fft.Pow - 3., log(self.x))) 
 
-    def get_transform(self, xin, f):
+    def get_transform(self, xin, f, sum_ell=False):
         Coef = self.fft.Coef(xin, f, mode=self.fft.mode, extrap=self.fft.extrap)
-        # CoefxPow = einsum('...ln,nx->...lnx', Coef, self.xPow)
-        # return real(einsum('...lnx,ln->...lx', CoefxPow, self.M)) 
-        CoefxPow = einsum('...n,nx->...nx', Coef, self.xPow)
-        return real(einsum('...nx,ln->...lx', CoefxPow, self.M)) 
+        if sum_ell:
+            CoefxPow = einsum('...ln,nx->...lnx', Coef, self.xPow)
+            return real(einsum('...lnx,ln->...lx', CoefxPow, self.M)) 
+        else:
+            CoefxPow = einsum('...n,nx->...nx', Coef, self.xPow)
+            return real(einsum('...nx,ln->...lx', CoefxPow, self.M)) 
 
