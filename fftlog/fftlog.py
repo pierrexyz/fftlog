@@ -38,17 +38,22 @@ class FFTLog(object):
         self.xmin = kwargs['xmin']
         self.xmax = kwargs['xmax']
         self.bias = kwargs['bias']
+        self.is_complex = kwargs['complex'] if 'complex' in kwargs else False
 
         self.dx = log(self.xmax / self.xmin) / (self.Nmax - 1.)
         i = arange(self.Nmax)
         self.x = self.xmin * exp(i * self.dx)
         self.xpb = exp(-self.bias * i * self.dx)
-        i = arange(-self.Nmax//2, self.Nmax//2+1)
-        self.Pow = self.bias + 1j * 2. * pi * i / (self.Nmax * self.dx)
+        if self.is_complex: 
+            self.Pow = self.bias + 1j * 2 * pi * fftshift(fftfreq(self.Nmax, d=self.dx)) 
+        else: 
+            i = arange(-self.Nmax//2, self.Nmax//2+1)
+            self.Pow = self.bias + 1j * 2. * pi * i / (self.Nmax * self.dx)
 
         if 'window' in kwargs:
             self.window = kwargs['window']
-            self.W = CoefWindow(self.Nmax, window=self.window)
+            if self.is_complex: self.W = CoefWindow(self.Nmax-1, window=self.window)
+            else: self.W = CoefWindow(self.Nmax, window=self.window)
         else:
             self.window = None
 
@@ -73,19 +78,23 @@ class FFTLog(object):
                 # fx = einsum('n, nx -> xn', mask_01, f_interp)
 
         fx = fx * self.xpb
-        tmp = rfft(fx, axis=-1)
-        Coef = concatenate((conj(tmp[...,::-1][...,:-1]), tmp), axis=-1)
+        
+        if self.is_complex: 
+            Coef = fftshift(fft(fx, axis=-1), axes=-1)
+        else: 
+            tmp = rfft(fx, axis=-1)
+            Coef = concatenate((conj(tmp[...,::-1][...,:-1]), tmp), axis=-1) 
+        
         Coef = Coef * exp(-self.Pow*log(self.xmin)) / float(self.Nmax)
 
         if self.window:
             Coef = Coef * self.W
-
-        else:
+        elif not self.is_complex: # Complex goes from [-N/2, N/2-1], while real goes from [-N/2, N/2], so we halve the double-counted -N/2 = N/2 elements
             if is_jax:
-                Coef = Coef.at[0].divide(2.).at[self.Nmax].divide(2.)
+                Coef = Coef.at[0].divide(2.).at[-1].divide(2.)
             else:
                 Coef[...,0] /= 2.
-                Coef[...,self.Nmax] /= 2.
+                Coef[...,-1] /= 2.
 
         return Coef
 

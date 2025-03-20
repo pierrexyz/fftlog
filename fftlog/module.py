@@ -8,13 +8,13 @@ if is_jax:
     jax_config.update("jax_enable_x64", True) 
     import jax.numpy as numpy
     from jax.numpy import load, asarray, array, ndarray, conj, ones, tan, log, logspace, swapaxes, empty, linspace, arange, delete, where, pi, cos, sin, log, exp, sqrt, concatenate, ones, zeros, real, where, einsum
-    from jax.numpy.fft import rfft
+    from jax.numpy.fft import rfft, fft, fftshift, fftfreq
     from fftlog.jax_special import interp1d
 
 else:
     import numpy
     from numpy import load, asarray, array, ndarray, conj, ones, tan, log, logspace, swapaxes, empty, array, linspace, arange, delete, where, pi, cos, sin, log, exp, sqrt, concatenate, ones, zeros, real, where, einsum
-    from numpy.fft import rfft
+    from numpy.fft import rfft, fft, fftshift, fftfreq
     from scipy.interpolate import interp1d
 
 from scipy.special import gamma, loggamma
