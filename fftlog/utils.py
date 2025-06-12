@@ -1,10 +1,15 @@
 from fftlog.module import *
 
-def CoefWindow(N, window=1, left=True, right=True):
+def MPC(l, pn):
+    """ matrix for spherical bessel transform from power spectrum to correlation function """
+    # return pi**-1.5 * 2.**(-2. * pn) * gamma(1.5 + l / 2. - pn) / gamma(l / 2. + pn)
+    return pi**-1.5 * 2.**(-2. * pn) * exp(loggamma(1.5 + l / 2. - pn) - loggamma(l / 2. + pn))
+
+def CoefWindow(N, window=1., left=True, right=True):
     """ FFTLog auxiliary function: window sending the FFT coefficients to 0 at the edges. Adapted from fast-pt """
 
     if is_jax:
-        n = arange(-N // 2, N // 2 + 1)
+        n = arange(-N // 2, N // 2)
         if window == 1:
             n_cut = N // 2
         else:
@@ -32,7 +37,7 @@ def CoefWindow(N, window=1, left=True, right=True):
         return W
 
     else:
-        n = arange(-N // 2, N // 2 + 1)
+        n = arange(-N // 2, N // 2)
         if window == 1:
             n_cut = N // 2
         else:
