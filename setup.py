@@ -7,7 +7,7 @@ setup(
     author="Pierre Zhang",
     license='MIT',
     packages=['fftlog'],
-    install_requires=['numpy', 'scipy', 'jax', 'interpax'],
+    install_requires=['numpy', 'scipy'],
     package_dir = {'fftlog': 'fftlog'},
     zip_safe=False,
 

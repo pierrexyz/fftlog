@@ -10,6 +10,7 @@ if is_jax:
     from jax.numpy import load, array, ndarray, conj, ones, tan, log, logspace, swapaxes, empty, linspace, arange, delete, where, pi, cos, sin, log, exp, sqrt, concatenate, ones, zeros, real, where, einsum
     from jax.numpy.fft import rfft
     from fftlog.jax_special import interp1d
+    from scipy.special import gamma, loggamma
 
 else:
     import numpy
