@@ -1,0 +1,87 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fftlog-lss"
+version = "0.1.2"
+description = "JAX-accelerated FFTLog implementation for Large Scale Structure cosmology"
+readme = "README.md"
+license = "MIT"
+authors = [
+    {name = "Pierre Zhang", email = "pierre.zhang@example.com"}
+]
+maintainers = [
+    {name = "Pierre Zhang", email = "pierre.zhang@example.com"}
+]
+keywords = ["fft", "logarithmic", "transform", "scientific", "numerical", "jax", "gpu", "acceleration"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+
+    "Operating System :: OS Independent",
+    "Environment :: Console",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy>=1.20.0",
+    "scipy>=1.7.0",
+]
+
+[project.optional-dependencies]
+jax = [
+    "jax>=0.4.0",
+    "jaxlib>=0.4.0",
+    "interpax>=0.3.0",
+]
+dev = [
+    "pytest>=6.0",
+    "pytest-cov>=2.0",
+    "black>=22.0",
+    "flake8>=4.0",
+    "mypy>=0.950",
+]
+docs = [
+    "sphinx>=4.0",
+    "sphinx-rtd-theme>=1.0",
+    "nbsphinx>=0.8",
+]
+
+[project.urls]
+Homepage = "https://github.com/pierrexyz/fftlog"
+Repository = "https://github.com/pierrexyz/fftlog"
+Documentation = "https://github.com/pierrexyz/fftlog#readme"
+"Bug Tracker" = "https://github.com/pierrexyz/fftlog/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["fftlog*"]
+
+[tool.setuptools.package-data]
+fftlog = ["*.py"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"] 
